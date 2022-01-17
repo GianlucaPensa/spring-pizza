@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<div th:replace="utilities :: headTags"></div>
+	<title>Ingredienti Edit</title>
+</head>
+
+<body>
+	<div class="container">
+		<h1>Ingredienti</h1>
+		<hr />
+		<form id="form-ingredienti" th:object="${ingredienti}" th:action="@{/ingredienti/create}" method="post">
+			<div class="row gy-2">
+				<div class="col-12">
+					<label class="form-label" for="nome">Nome</label>
+					<input type="text" class="form-control" id="nome" th:field="*{nome}">
+				<div class="col-12 mt-2">
+					<button class="btn btn-primary" type="submit">Save</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div th:replace="utilities :: scripts"></div>
+</body>
+</html>

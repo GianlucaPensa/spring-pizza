@@ -2,9 +2,8 @@ package org.generation.italy.controller;
 
 import javax.validation.Valid;
 
-import org.generation.italy.model.Pizza;
+import org.generation.italy.model.Ingredienti;
 import org.generation.italy.service.IngredientiService;
-import org.generation.italy.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,62 +15,54 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/pizze")
-public class PizzaController {
+@RequestMapping("/ingredienti")
+public class IngredientiController {
 	
 	@Autowired
-	private PizzaService service;
-	
-	@Autowired
-	private IngredientiService ingredientiService;
+	private IngredientiService service;
 	
 	@GetMapping
 	public String list(Model model) {
-		model.addAttribute("list", service.findAllSortedByPrice());
-		return "menu";
+		model.addAttribute("list", service.findAllSortedByNome());
+		return "/ingredienti/list";
 	}
 	
 	@GetMapping("/create")
 	public String create(Model model) {
-		model.addAttribute("edit", false);
-		model.addAttribute("pizza", new Pizza());
-		model.addAttribute("ingredienti", ingredientiService.findAllSortedByNome());
-		return "/edit";
+		model.addAttribute("ingredienti", new Ingredienti());
+		return "/ingredienti/edit";
 	}
 	
 	@PostMapping("/create")
-	public String doCreate(@Valid @ModelAttribute("pizza") Pizza formPizza, BindingResult bindingResult, Model model) {
+	public String doCreate(@Valid @ModelAttribute("ingredienti") Ingredienti ingredienti, BindingResult bindingResult, Model model) {
 		if(bindingResult.hasErrors()) {
 			model.addAttribute("edit", false);
-			model.addAttribute("ingredienti", ingredientiService.findAllSortedByNome());
-			return "/edit";
+			return "/ingredienti/edit";
 		}
-		service.save(formPizza);
-		return "redirect:/pizze";
+		service.save(ingredienti);
+		return "redirect:/ingredienti";
 	}
 	
 	@GetMapping("/delete/{id}")
 	public String doDelete(Model model, @PathVariable("id") Integer id) {
 		service.deleteById(id);
-		return "redirect:/pizze";
+		return "redirect:/ingredienti";
 	}
 	
 	@GetMapping("/edit/{id}")
 	public String edit (@PathVariable("id") Integer id, Model model) {
 		model.addAttribute("edit", true);
-		model.addAttribute("pizza", service.getById(id));
-		model.addAttribute("ingredienti", ingredientiService.findAllSortedByNome());
-		return "/edit";
+		model.addAttribute("ingredienti", service.getById(id));
+		return "/ingredienti/edit";
 	}
 	
 	@PostMapping("/edit/{id}")
-	public String doUpdate(@Valid @ModelAttribute("pizza") Pizza formPizza, BindingResult bindingResult, Model model) {
+	public String doUpdate(@Valid @ModelAttribute("ingredienti") Ingredienti ingredienti, BindingResult bindingResult, Model model) {
 		if(bindingResult.hasErrors()) {
 			model.addAttribute("edit", true);
-			model.addAttribute("ingredienti", ingredientiService.findAllSortedByNome());
-			return "/edit";
+			return "/ingredienti/edit";
 		}
-		service.update(formPizza);
-		return "redirect:/pizze";
+		service.save(ingredienti);
+		return "redirect:/ingredienti";
 	}
 }
